@@ -1,0 +1,83 @@
+<html>
+<head>
+<style>
+#test {
+        width: 1000;
+        height:1000;
+        border: 1px solid black;
+        background: red; /* For browsers that do not support gradients */
+        background: -webkit-radial-gradient(green, yellow, red); /* Safari 5.1 to 6.0 */
+        background: -o-radial-gradient(green, yellow, red); /* For Opera 11.6 to 12.0 */
+        background: -moz-radial-gradient(green, yellow, red); /* For Firefox 3.6 to 15 */
+        background: radial-gradient(green, yellow, red); /* Standard syntax */
+        -moz-border-radius: 500px;
+        -webkit-border-radius: 500px;
+        border-radius: 500px;
+}
+
+</style>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+</script>
+</head>
+<body>
+
+<canvas id="test" width=1000 height=1000 onMouseMove="displayPos(event);" onTouchMove="displayPos(event);"></canvas>
+<div id="textbox"></div>
+<script>
+var prevX = 0;
+var prevY = 0;
+var c = document.getElementById("test");
+var ctx = c.getContext("2d");
+document.body.addEventListener("touchstart", function (e) {
+  if (e.target == c) {
+      e.preventDefault();
+        }
+        }, false);
+        document.body.addEventListener("touchend", function (e) {
+          if (e.target == c) {
+              e.preventDefault();
+                }
+                }, false);
+                document.body.addEventListener("touchmove", function (e) {
+                  if (e.target == c) {
+                      e.preventDefault();
+                        }
+                        }, false);
+function displayPos(e) {
+        var x = e.touches[0].clientX-500;;
+        var y = -(e.touches[0].clientY-500);
+	if(calcDist(prevX, prevY, x, y) > 1) {
+		if(x < 0) {
+			socket.emit('controlMsg', {'devId': 1234, command: 'left', params: {angle: -1*x/500*100}});
+		} else {
+			socket.emit('controlMsg', {'devId': 1234, command: 'right', params: {angle: x/500*100}});
+		}
+		if(y < 0) {
+			socket.emit('controlMsg', {'devId': 1234, command: 'backward', params: {angle: -1*y/500*100}});
+		} else {
+			socket.emit('controlMsg', {'devId': 1234, command: 'forward', params: {angle: y/500*100}});
+		}
+		prevX = x;
+		prevY= y;
+	}
+        var coor = "Coordinates: (" + x + "," + y + ")";
+        document.getElementById("textbox").innerHTML = coor + " " + e.buttons;
+        ctx.clearRect(0,0,1000,1000);
+        ctx.beginPath();
+        ctx.moveTo(500,500);
+        ctx.lineTo(e.touches[0].clientX, e.touches[0].clientY);
+        ctx.stroke();
+        ctx.closePath();
+
+}
+
+function calcDist(prevX, prevY, x, y) {
+	return Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2));
+}
+
+</script>
+</body>
+</html>
+
