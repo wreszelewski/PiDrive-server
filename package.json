@@ -1,0 +1,9 @@
+{
+  "name": "pidrive-server",
+  "version": "0.0.1",
+  "description": "Server for relying control messages to RaspberryPi controlled car.",
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.4.5"
+  }
+}
