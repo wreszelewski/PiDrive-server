@@ -50,14 +50,14 @@ function displayPos(e) {
         var y = -(e.touches[0].clientY-500);
 	if(calcDist(prevX, prevY, x, y) > 1) {
 		if(x < 0) {
-			socket.emit('controlMsg', {'devId': 1234, command: 'left', params: {angle: -1*x/500*100}});
+			socket.emit('controlMsg', {'devId': '1234', command: 'left', params: {angle: -1*x/500*100}});
 		} else {
-			socket.emit('controlMsg', {'devId': 1234, command: 'right', params: {angle: x/500*100}});
+			socket.emit('controlMsg', {'devId': '1234', command: 'right', params: {angle: x/500*100}});
 		}
 		if(y < 0) {
-			socket.emit('controlMsg', {'devId': 1234, command: 'backward', params: {angle: -1*y/500*100}});
+			socket.emit('controlMsg', {'devId': '1234', command: 'backward', params: {speed: -1*y/500*100}});
 		} else {
-			socket.emit('controlMsg', {'devId': 1234, command: 'forward', params: {angle: y/500*100}});
+			socket.emit('controlMsg', {'devId': '1234', command: 'forward', params: {speed: y/500*100}});
 		}
 		prevX = x;
 		prevY= y;
